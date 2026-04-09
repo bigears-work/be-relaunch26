@@ -1,0 +1,52 @@
+:root{
+--contrast: #1d1d1b;
+    --contrast-2: #2A2A27;
+    --contrast-3: #353531;
+    --base: #FFF8F0;
+    --base-2: #fffbf6;
+    --base-3: #fdfdfd;
+    --accent: #FC8A49;
+    --lm-contrast: #fdfdfd;
+    --lm-contrast-2: #fffbf6;
+    --lm-contrast-3: #FFF8F0;
+    --lm-base: #1d1d1b;
+    --lm-base-2: #2A2A27;
+    --lm-base-3: #353531;
+    --lm-accent: #a61c3c;
+    --constant-wht: #fdfdfd;
+    --constant-blk: #1d1d1b;
+}
+
+body.login{
+    background: var(--contrast);
+}
+
+.login form{
+    background: var(--base3);
+    border: 2px solid var(--contrast-3);
+    padding: 2rem;
+    border-radius: 10px;
+}
+
+.login #backtoblog a,
+.login #nav a, a{
+    color: var(--lm-accent) !important;
+}
+
+.login .button.wp-hide-pw{
+    color: var(--lm-accent);
+}
+
+.wp-core-ui .button-primary{
+    background: var(--lm-accent) !important;
+    border-color: var(--lm-accent) !important;
+}
+
+.wp-core-ui .button-primary:hover, .login .button.wp-hide-pw {
+    filter: brightness(0.95);
+}
+
+input[type=checkbox]:focus, input[type=color]:focus, input[type=date]:focus, input[type=datetime-local]:focus, input[type=datetime]:focus, input[type=email]:focus, input[type=month]:focus, input[type=number]:focus, input[type=password]:focus, input[type=radio]:focus, input[type=search]:focus, input[type=tel]:focus, input[type=text]:focus, input[type=time]:focus, input[type=url]:focus, input[type=week]:focus, select:focus, textarea:focus{
+    border-color: var(--lm-accent);
+    box-shadow: 0 0 0 1px var(--lm-accent);
+}

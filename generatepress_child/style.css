@@ -1,0 +1,50 @@
+/*
+ Theme Name:   Big Ears GP Child-Theme
+ Text Domain:  bew
+ Description:  Based on GeneratePress with GSAP and Flickity embedded.
+ Author:       Big Ears Webagentur
+ Author URI:   https://bigears.work
+ Template:     generatepress
+ Version:      0.1
+*/
+
+/*** Start KMW ***/
+
+/* Versteckte H1 Home*/
+.gb-text-beda6e7b {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset( 50% );
+        white-space: nowrap;
+        border: 0;
+    }
+
+/* Initialzustand via CSS als Fallback (vor GSAP-Init) –
+   verhindert FOUC falls Script kurz verzögert lädt        */
+.gbp-section__inner .gbp-card {
+	visibility: hidden;
+}
+
+/* ============================================
+   About Section — FOUC-Schutz
+   Muss im Child-Theme stehen, nicht in GB.
+   GSAP überschreibt visibility on DOMContentLoaded.
+   ============================================ */
+
+#bio-img,
+#bio-txt > * {
+    visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #bio-img,
+    #bio-txt > * {
+        visibility: visible !important;
+        opacity:    1 !important;
+        transform:  none !important;
+    }
+}
