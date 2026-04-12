@@ -22,7 +22,7 @@ body.login{
 }
 
 .login form{
-    background: var(--base3);
+    background: var(--base-3);
     border: 2px solid var(--contrast-3);
     padding: 2rem;
     border-radius: 10px;

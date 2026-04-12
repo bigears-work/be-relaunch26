@@ -26,24 +26,24 @@
     tight:  { zone: 0.60, move: 0.55, dur: 0.95 }
   };
 
-  // Target elements: anything with `.magnetic`
-  var els = Array.prototype.slice.call(document.querySelectorAll(".magnetic"));
+  // Target elements: anything with `.be-magnetic`
+  var els = Array.prototype.slice.call(document.querySelectorAll(".be-magnetic"));
   if (!els.length) return;
 
   function computeConfig(el) {
     var zoneF = 1, moveF = 1, durF = 1;
 
-    if (el.classList.contains("magnetic--subtle")) {
+    if (el.classList.contains("be-magnetic--subtle")) {
       zoneF *= MODS.subtle.zone; moveF *= MODS.subtle.move; durF *= MODS.subtle.dur;
     }
-    if (el.classList.contains("magnetic--strong")) {
+    if (el.classList.contains("be-magnetic--strong")) {
       zoneF *= MODS.strong.zone; moveF *= MODS.strong.move; durF *= MODS.strong.dur;
     }
-    if (el.classList.contains("magnetic--tight")) {
+    if (el.classList.contains("be-magnetic--tight")) {
       zoneF *= MODS.tight.zone; moveF *= MODS.tight.move; durF *= MODS.tight.dur;
     }
-    if (el.classList.contains("magnetic--slow")) durF *= MODS.slow.dur;
-    if (el.classList.contains("magnetic--fast")) durF *= MODS.fast.dur;
+    if (el.classList.contains("be-magnetic--slow")) durF *= MODS.slow.dur;
+    if (el.classList.contains("be-magnetic--fast")) durF *= MODS.fast.dur;
 
     // Build final config
     return {

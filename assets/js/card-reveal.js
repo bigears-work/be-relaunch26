@@ -22,7 +22,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 	grids.forEach( ( grid ) => {
 
-		const cards = grid.querySelectorAll( '.gbp-card' );
+		const cards = grid.querySelectorAll( '.gbp-card__stagger' );
 
 		if ( ! cards.length ) return;
 

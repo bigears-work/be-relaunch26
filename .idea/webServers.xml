@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="d5c5b5df-a9cb-4a0e-94e4-39a7b5e258d9" name="Raidboxes" url="http://sftp.raidboxes.de">
+        <fileTransfer accessType="SFTP" host="sftp.raidboxes.de" port="22" sshConfigId="86270947-ee26-460d-8933-d29be20973f2" sshConfig="RB946376@sftp.raidboxes.de:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
