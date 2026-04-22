@@ -1,6 +1,14 @@
-// Big Ears Webagentur – Magnetic Sound v2.1
-// Aktivierung per Click auf [data-sound-toggle].
-// Pop nur beim Aktivieren. Hover-Sound auf [data-sound-hover]-Elementen.
+/**
+ * Big Ears Webagentur – Magnetic Sound v2.1
+ *
+ * Hover-Sound System für .magnetic Grid-Elemente.
+ *  -> Aktivierung per Click auf [data-sound-toggle]
+ *  -> Einmaliger Pop beim Aktivieren
+ *  -> Dorische Skala, Synth-Pluck (tief, atmosphärisch)
+ *  -> Cooldown + Fade-Out bei schnellem Hovern
+ *
+ * @requires Web Audio API
+ */
 
 ( function () {
 
@@ -91,6 +99,8 @@
         osc1.start( now ); osc1.stop( stop );
         osc2.start( now ); osc2.stop( stop );
         osc3.start( now ); osc3.stop( stop );
+
+        return master; // ← neu: Referenz für Fade-Out
     }
 
     // ─── Öffentliche API ──────────────────────────────────────────────────────
@@ -137,15 +147,42 @@
 
     // ─── Hover-Sound auf [data-sound-hover] ───────────────────────────────────
     function initHoverSounds() {
+        var COOLDOWN    = 120;  // ms zwischen zwei Sounds
+        var FADE_OUT    = 0.08; // Sekunden für Fade-Out des vorherigen Sounds
+        var _lastPlayed = 0;
+        var _activeGain = null; // Referenz auf den aktuell laufenden Master-Gain
+
         document.addEventListener( 'mouseenter', function ( e ) {
             if ( ! _enabled ) return;
 
             var el = e.target;
             if ( ! el || ! el.hasAttribute || ! el.hasAttribute( 'data-sound-hover' ) ) return;
 
-            var pitch  = parseFloat( el.dataset.soundPitch  ) || 198;
-            var volume = parseFloat( el.dataset.soundVolume ) || 0.5;
-            playPop( pitch, volume );
+            var now     = performance.now();
+            var elapsed = now - _lastPlayed;
+
+            // Cooldown noch nicht abgelaufen → ignorieren
+            if ( elapsed < COOLDOWN ) return;
+
+            // Vorherigen Sound schnell ausblenden
+            if ( _activeGain ) {
+                try {
+                    var ac      = getCtx();
+                    var fadeNow = ac.currentTime;
+                    _activeGain.gain.cancelScheduledValues( fadeNow );
+                    _activeGain.gain.setValueAtTime( _activeGain.gain.value, fadeNow );
+                    _activeGain.gain.exponentialRampToValueAtTime( 0.0001, fadeNow + FADE_OUT );
+                } catch ( err ) {}
+                _activeGain = null;
+            }
+
+            _lastPlayed = now;
+
+            var pitch  = parseFloat( el.dataset.soundPitch  ) || 98;
+            var volume = parseFloat( el.dataset.soundVolume ) || 0.25;
+
+            // playPop gibt jetzt den master-Gain zurück
+            _activeGain = playPop( pitch, volume );
 
         }, true );
     }
