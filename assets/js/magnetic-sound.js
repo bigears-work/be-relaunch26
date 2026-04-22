@@ -1,4 +1,4 @@
-//Big Ears Webagentur – Magnetic Sound v2.0
+// Big Ears Webagentur – Magnetic Sound v2.1
 // Aktivierung per Click auf [data-sound-toggle].
 // Pop nur beim Aktivieren. Hover-Sound auf [data-sound-hover]-Elementen.
 
@@ -13,10 +13,10 @@
     var STORAGE_KEY = 'bew_magnetic_sound';
     var _enabled    = false;
 
-    try { _enabled = localStorage.getItem( STORAGE_KEY ) === '1'; } catch ( e ) {}
+    try { _enabled = sessionStorage.getItem( STORAGE_KEY ) === '1'; } catch ( e ) {}
 
     function saveState( val ) {
-        try { localStorage.setItem( STORAGE_KEY, val ? '1' : '0' ); } catch ( e ) {}
+        try { sessionStorage.setItem( STORAGE_KEY, val ? '1' : '0' ); } catch ( e ) {}
     }
 
     function dispatchChange( enabled ) {
@@ -36,68 +36,58 @@
         return _ctx;
     }
 
-    // ─── Pop-Synthesizer ──────────────────────────────────────────────────────
-    // ─── Synth-Pluck (hochwertiges Sounddesign) ───────────────────────────────
-// Drei Oszillatoren: Fundamental + leicht verstimmte Kopie + Sub-Oktave
-// Amp-Envelope: sofortiger Attack, sauberer exponentieller Decay
-// Filter-Envelope: Brightness-Sweep von offen nach gedämpft
-
+    // ─── Synth-Pluck (tief, atmosphärisch) ───────────────────────────────────
     function playPop( pitch, volume ) {
         var ac  = getCtx();
         var now = ac.currentTime;
 
-        // Master-Gain (Gesamtlautstärke + Amp-Envelope)
         var master = ac.createGain();
         master.gain.setValueAtTime( 0.0001, now );
-        master.gain.linearRampToValueAtTime( volume, now + 0.004 );      // Attack: 4ms
-        master.gain.exponentialRampToValueAtTime( volume * 0.6, now + 0.04 );  // Peak Decay
-        master.gain.exponentialRampToValueAtTime( 0.0001, now + 0.35 );  // Release: 350ms
+        master.gain.linearRampToValueAtTime( volume, now + 0.008 );
+        master.gain.exponentialRampToValueAtTime( volume * 0.4, now + 0.12 );
+        master.gain.exponentialRampToValueAtTime( 0.0001, now + 1.4 );
 
-        // Biquad-Filter (Tiefpass) — Filter-Sweep für Brillanz
         var filter       = ac.createBiquadFilter();
         filter.type      = 'lowpass';
-        filter.Q.value   = 1.2;
-        filter.frequency.setValueAtTime( pitch * 8, now );               // offen am Anfang
-        filter.frequency.exponentialRampToValueAtTime( pitch * 2, now + 0.12 ); // zuziehen
+        filter.Q.value   = 0.3;
+        filter.frequency.setValueAtTime( pitch * 4, now );
+        filter.frequency.exponentialRampToValueAtTime( pitch * 1.2, now + 0.45 );
 
-        // Oszillator 1: Fundamental (Sawtooth für Obertöne/Körper)
-        var osc1      = ac.createOscillator();
-        osc1.type     = 'sawtooth';
+        var osc1  = ac.createOscillator();
+        osc1.type = 'sine';
         osc1.frequency.setValueAtTime( pitch, now );
-        // Leichtes Pitch-Envelope — charakteristisch für Pluck
-        osc1.frequency.exponentialRampToValueAtTime( pitch * 0.98, now + 0.08 );
+        osc1.frequency.exponentialRampToValueAtTime( pitch * 0.97, now + 0.3 );
 
-        // Oszillator 2: leicht verstimmt (+4 Cent) → Breite, Lebendigkeit
-        var osc2      = ac.createOscillator();
-        osc2.type     = 'sawtooth';
-        osc2.frequency.setValueAtTime( pitch * 1.0023, now );            // +4 Cent
-        osc2.frequency.exponentialRampToValueAtTime( pitch * 0.982, now + 0.08 );
+        var osc2  = ac.createOscillator();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime( pitch * 1.001, now );
+        osc2.frequency.exponentialRampToValueAtTime( pitch * 0.972, now + 0.3 );
 
-        // Oszillator 3: Sub-Oktave (Sine) → Wärme, Fundament
-        var osc3      = ac.createOscillator();
-        osc3.type     = 'sine';
+        var osc3  = ac.createOscillator();
+        osc3.type = 'sine';
         osc3.frequency.setValueAtTime( pitch * 0.5, now );
 
-        // Sub-Gain: leiser als die anderen
-        var subGain   = ac.createGain();
-        subGain.gain.setValueAtTime( 0.3, now );
-        subGain.gain.exponentialRampToValueAtTime( 0.0001, now + 0.2 );
+        var subGain = ac.createGain();
+        subGain.gain.setValueAtTime( 0.2, now );
+        subGain.gain.exponentialRampToValueAtTime( 0.0001, now + 1.2 );
 
-        // Signal-Kette:
-        // osc1 ──┐
-        // osc2 ──┤→ filter → master → destination
-        // osc3 ──┤→ subGain ──────────┘
+        var delay             = ac.createDelay( 0.5 );
+        delay.delayTime.value = 0.08;
+        var delayGain         = ac.createGain();
+        delayGain.gain.value  = 0.18;
+
+        master.connect( delay );
+        delay.connect( delayGain );
+        delayGain.connect( ac.destination );
+
         osc1.connect( filter );
         osc2.connect( filter );
         filter.connect( master );
-
         osc3.connect( subGain );
         subGain.connect( master );
-
         master.connect( ac.destination );
 
-        // Starten & Stoppen
-        var stop = now + 0.4;
+        var stop = now + 1.8;
         osc1.start( now ); osc1.stop( stop );
         osc2.start( now ); osc2.stop( stop );
         osc3.start( now ); osc3.stop( stop );
@@ -108,7 +98,7 @@
         enable: function () {
             _enabled = true;
             saveState( true );
-            playPop( 300, 0.15 ); // einmaliger Pop nur beim Aktivieren
+            playPop( 98, 0.5 ); // Aktivierungs-Pop
             dispatchChange( true );
         },
         disable: function () {
@@ -153,11 +143,11 @@
             var el = e.target;
             if ( ! el || ! el.hasAttribute || ! el.hasAttribute( 'data-sound-hover' ) ) return;
 
-            var pitch  = parseFloat( el.dataset.soundPitch  ) || 300;
-            var volume = parseFloat( el.dataset.soundVolume ) || 0.15;
+            var pitch  = parseFloat( el.dataset.soundPitch  ) || 198;
+            var volume = parseFloat( el.dataset.soundVolume ) || 0.5;
             playPop( pitch, volume );
 
-        }, true ); // capture: true → fängt alle mouseenter im DOM ab
+        }, true );
     }
 
     // ─── Init ─────────────────────────────────────────────────────────────────
