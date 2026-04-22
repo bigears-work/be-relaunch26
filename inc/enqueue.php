@@ -39,12 +39,6 @@ add_action( 'wp_enqueue_scripts', function () {
             $v( '/assets/js/hero-anim.js' ),
             true
         );
-        wp_enqueue_script( 'about-anim',
-            $uri . '/assets/js/about-anim.js',
-            [ 'gsap-scrolltrigger' ],
-            $v( '/assets/js/about-anim.js' ),
-            true
-        );
     }
 
     wp_enqueue_script( 'gbp-card-reveal',

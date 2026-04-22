@@ -211,3 +211,17 @@
     outline:        2px solid var(--accent);
     outline-offset: 3px;
 }
+
+/* Sound Button Standard: beide unsichtbar bis JS State setzt */
+.sound-icon-on,
+.sound-icon-off {
+    transition: opacity 0.25s ease;
+}
+
+/* OFF */
+[data-sound-toggle="off"] .sound-icon-on  { display: none; }
+[data-sound-toggle="off"] .sound-icon-off { display: block; }
+
+/* ON */
+[data-sound-toggle="on"] .sound-icon-on  { display: block; }
+[data-sound-toggle="on"] .sound-icon-off { display: none; }
