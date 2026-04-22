@@ -37,23 +37,70 @@
     }
 
     // ─── Pop-Synthesizer ──────────────────────────────────────────────────────
+    // ─── Synth-Pluck (hochwertiges Sounddesign) ───────────────────────────────
+// Drei Oszillatoren: Fundamental + leicht verstimmte Kopie + Sub-Oktave
+// Amp-Envelope: sofortiger Attack, sauberer exponentieller Decay
+// Filter-Envelope: Brightness-Sweep von offen nach gedämpft
+
     function playPop( pitch, volume ) {
         var ac  = getCtx();
         var now = ac.currentTime;
 
-        var osc      = ac.createOscillator();
-        osc.type     = 'sine';
-        osc.frequency.setValueAtTime( pitch, now );
-        osc.frequency.exponentialRampToValueAtTime( pitch * 0.6, now + 0.08 );
+        // Master-Gain (Gesamtlautstärke + Amp-Envelope)
+        var master = ac.createGain();
+        master.gain.setValueAtTime( 0.0001, now );
+        master.gain.linearRampToValueAtTime( volume, now + 0.004 );      // Attack: 4ms
+        master.gain.exponentialRampToValueAtTime( volume * 0.6, now + 0.04 );  // Peak Decay
+        master.gain.exponentialRampToValueAtTime( 0.0001, now + 0.35 );  // Release: 350ms
 
-        var gain = ac.createGain();
-        gain.gain.setValueAtTime( volume, now );
-        gain.gain.exponentialRampToValueAtTime( 0.0001, now + 0.12 );
+        // Biquad-Filter (Tiefpass) — Filter-Sweep für Brillanz
+        var filter       = ac.createBiquadFilter();
+        filter.type      = 'lowpass';
+        filter.Q.value   = 1.2;
+        filter.frequency.setValueAtTime( pitch * 8, now );               // offen am Anfang
+        filter.frequency.exponentialRampToValueAtTime( pitch * 2, now + 0.12 ); // zuziehen
 
-        osc.connect( gain );
-        gain.connect( ac.destination );
-        osc.start( now );
-        osc.stop( now + 0.15 );
+        // Oszillator 1: Fundamental (Sawtooth für Obertöne/Körper)
+        var osc1      = ac.createOscillator();
+        osc1.type     = 'sawtooth';
+        osc1.frequency.setValueAtTime( pitch, now );
+        // Leichtes Pitch-Envelope — charakteristisch für Pluck
+        osc1.frequency.exponentialRampToValueAtTime( pitch * 0.98, now + 0.08 );
+
+        // Oszillator 2: leicht verstimmt (+4 Cent) → Breite, Lebendigkeit
+        var osc2      = ac.createOscillator();
+        osc2.type     = 'sawtooth';
+        osc2.frequency.setValueAtTime( pitch * 1.0023, now );            // +4 Cent
+        osc2.frequency.exponentialRampToValueAtTime( pitch * 0.982, now + 0.08 );
+
+        // Oszillator 3: Sub-Oktave (Sine) → Wärme, Fundament
+        var osc3      = ac.createOscillator();
+        osc3.type     = 'sine';
+        osc3.frequency.setValueAtTime( pitch * 0.5, now );
+
+        // Sub-Gain: leiser als die anderen
+        var subGain   = ac.createGain();
+        subGain.gain.setValueAtTime( 0.3, now );
+        subGain.gain.exponentialRampToValueAtTime( 0.0001, now + 0.2 );
+
+        // Signal-Kette:
+        // osc1 ──┐
+        // osc2 ──┤→ filter → master → destination
+        // osc3 ──┤→ subGain ──────────┘
+        osc1.connect( filter );
+        osc2.connect( filter );
+        filter.connect( master );
+
+        osc3.connect( subGain );
+        subGain.connect( master );
+
+        master.connect( ac.destination );
+
+        // Starten & Stoppen
+        var stop = now + 0.4;
+        osc1.start( now ); osc1.stop( stop );
+        osc2.start( now ); osc2.stop( stop );
+        osc3.start( now ); osc3.stop( stop );
     }
 
     // ─── Öffentliche API ──────────────────────────────────────────────────────
