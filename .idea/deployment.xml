@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="Raidboxes" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" serverName="Raidboxes (project level)" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
+    <option name="confirmBeforeUploading" value="false" />
     <serverData>
       <paths name="Raidboxes">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/279391_klon_der_box_big_ears_relaunch/wordpress/wp-content/themes/generatepress_child" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="Raidboxes (project level)">
         <serverdata>
           <mappings>
             <mapping deploy="/279391_klon_der_box_big_ears_relaunch/wordpress/wp-content/themes/generatepress_child" local="$PROJECT_DIR$" web="/" />

@@ -1,7 +1,7 @@
 /*
  Theme Name:   Big Ears GP Child-Theme
  Text Domain:  bew
- Description:  Based on GeneratePress with GSAP and Flickity embedded.
+ Description:  Based on GeneratePress with GSAP embedded.
  Author:       Big Ears Webagentur
  Author URI:   https://bigears.work
  Template:     generatepress
@@ -10,41 +10,204 @@
 
 /*** Start KMW ***/
 
-/* Versteckte H1 Home*/
-.gb-text-beda6e7b {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip-path: inset( 50% );
-        white-space: nowrap;
-        border: 0;
-    }
-
-/* Initialzustand via CSS als Fallback (vor GSAP-Init) –
-   verhindert FOUC falls Script kurz verzögert lädt        */
-.gbp-section__inner .gbp-card {
-	visibility: hidden;
+/* Visually hidden h1 (SEO only, not rendered) */
+.be-text--h1-special {
+    position:    absolute;
+    width:       1px;
+    height:      1px;
+    padding:     0;
+    margin:      -1px;
+    overflow:    hidden;
+    clip-path:   inset(50%);
+    white-space: nowrap;
+    border:      0;
 }
 
-/* ============================================
-   About Section — FOUC-Schutz
-   Muss im Child-Theme stehen, nicht in GB.
-   GSAP überschreibt visibility on DOMContentLoaded.
-   ============================================ */
 
-#bio-img,
-#bio-txt > * {
+/* Scrollbar – Chromium / Safari / Edge */
+::-webkit-scrollbar {
+    width:  1rem;
+    height: 1rem;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--contrast);
+    box-shadow: inset 5px 5px 5px 5px rgba(0, 0, 0, 0.15);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--base-3);
+    border:           3px solid var(--contrast);
+    border-radius:    9999px;
+    background-clip:  content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--base-2);
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--contrast);
+}
+
+/* Scrollbar – Firefox */
+* {
+    scrollbar-color: var(--base-3) var(--contrast);
+    scrollbar-width: thin;
+}
+
+
+/* GSAP animation initial state – prevents FOUC before script loads */
+.gbp-section__inner .gbp-card .gbp-card__stagger {
     visibility: hidden;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    #bio-img,
-    #bio-txt > * {
-        visibility: visible !important;
-        opacity:    1 !important;
-        transform:  none !important;
+
+/* CTA buttons – shared base */
+.be-cta__wrapper .be-cta--phone,
+.be-cta__wrapper .be-cta--calendly,
+.be-cta__wrapper .be-cta--email {
+    display:         inline-flex;
+    align-items:     center;
+    justify-content: center;
+    justify-self:    stretch;
+    gap:             0.5em;
+    text-align:      center;
+    text-decoration: none;
+    border-radius:   100rem;
+    border-width:    1px;
+    border-style:    solid;
+    transition:
+        background   0.5s ease-in-out,
+        border-color 0.5s ease-in-out,
+        color        0.2s ease-in-out,
+        opacity      0.2s ease-in-out;
+}
+
+
+/* CTA buttons – mobile (phone = primary + huge) */
+.be-cta__wrapper .be-cta--phone {
+    background-color: var(--base-2);
+    color:            var(--contrast);
+    border-color:     var(--base);
+    font-size:        clamp(1.20rem, calc(1.109rem + 0.453vw), 1.56rem);
+    padding:          0.75em 2em;
+}
+
+.be-cta__wrapper .be-cta--phone:is(:hover, :focus) {
+    background-color: var(--accent);
+    border-color:     var(--accent);
+    color:            var(--contrast);
+}
+
+.be-cta__wrapper .be-cta--calendly {
+    background-color: transparent;
+    color:            var(--base);
+    border-color:     var(--base);
+    font-size:        1rem;
+    padding:          0.75rem 1.5rem;
+    opacity:          0.8;
+}
+
+.be-cta__wrapper .be-cta--calendly:is(:hover, :focus) {
+    background-color: var(--accent);
+    border-color:     var(--accent);
+    color:            var(--contrast);
+    opacity:          1;
+}
+
+.be-cta__wrapper .be-cta--email {
+    background-color: transparent;
+    color:            var(--base);
+    border-color:     var(--base);
+    font-size:        1rem;
+    padding:          0.75rem 1.5rem;
+    opacity:          0.8;
+}
+
+.be-cta__wrapper .be-cta--email:is(:hover, :focus) {
+    background-color: var(--accent);
+    border-color:     var(--accent);
+    color:            var(--contrast);
+    opacity:          1;
+}
+
+
+/* CTA buttons – desktop (calendly = primary + huge, order: calendly / email / phone) */
+@media (min-width: 768px) {
+
+    .be-cta__wrapper .be-cta--calendly { order: 1; }
+    .be-cta__wrapper .be-cta--email    { order: 2; }
+    .be-cta__wrapper .be-cta--phone    { order: 3; }
+
+    .be-cta__wrapper .be-cta--calendly {
+        background-color: var(--base-2);
+        color:            var(--contrast);
+        border-color:     var(--base);
+        font-size:        clamp(1.20rem, calc(1.109rem + 0.453vw), 1.56rem);
+        padding:          0.75em 2em;
+        opacity:          1;
     }
+
+    .be-cta__wrapper .be-cta--calendly:is(:hover, :focus) {
+        background-color: var(--accent);
+        border-color:     var(--accent);
+        color:            var(--contrast);
+    }
+
+    .be-cta__wrapper .be-cta--email {
+        background-color: transparent;
+        color:            var(--base);
+        border-color:     var(--base);
+        font-size:        1rem;
+        padding:          0.75rem 1.5rem;
+        opacity:          0.8;
+    }
+
+    .be-cta__wrapper .be-cta--email:is(:hover, :focus) {
+        background-color: var(--accent);
+        border-color:     var(--accent);
+        color:            var(--contrast);
+        opacity:          1;
+    }
+
+    .be-cta__wrapper .be-cta--phone {
+        background-color: transparent;
+        color:            var(--base);
+        border-color:     var(--base);
+        font-size:        1rem;
+        padding:          0.75rem 1.5rem;
+        opacity:          0.8;
+    }
+
+    .be-cta__wrapper .be-cta--phone:is(:hover, :focus) {
+        background-color: var(--accent);
+        border-color:     var(--accent);
+        color:            var(--contrast);
+        opacity:          1;
+    }
+}
+
+
+/* CTA buttons – nested anchor tags (GB sometimes wraps button text in <a>) */
+.be-cta__wrapper .be-cta--phone a,
+.be-cta__wrapper .be-cta--calendly a,
+.be-cta__wrapper .be-cta--email a {
+    color:           inherit;
+    text-decoration: none;
+}
+
+.be-cta__wrapper .be-cta--phone a:hover,
+.be-cta__wrapper .be-cta--calendly a:hover,
+.be-cta__wrapper .be-cta--email a:hover {
+    color: inherit;
+}
+
+
+/* CTA buttons – focus ring */
+.be-cta__wrapper .be-cta--phone:focus-visible,
+.be-cta__wrapper .be-cta--calendly:focus-visible,
+.be-cta__wrapper .be-cta--email:focus-visible {
+    outline:        2px solid var(--accent);
+    outline-offset: 3px;
 }
