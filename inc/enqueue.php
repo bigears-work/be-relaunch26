@@ -47,4 +47,11 @@ add_action( 'wp_enqueue_scripts', function () {
         $v( '/assets/js/card-reveal.js' ),
         true
     );
+
+    wp_enqueue_script( 'logo-anim',
+        $uri . '/assets/js/logo-anim.js',
+        [ 'gsap-scrolltrigger' ],
+        $v( '/assets/js/logo-anim.js' ),
+        true
+    );
 } );
