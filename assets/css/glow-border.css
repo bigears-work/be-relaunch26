@@ -1,0 +1,44 @@
+.has-glow-border .glow-border-target,
+.glow-border-target {
+    position: relative;
+}
+
+.has-glow-border .glow-border-target::after,
+.glow-border-target::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+        from var(--glow-angle, 0deg),
+        transparent 75%,
+        var(--accent) 90%,
+        transparent 100%
+    );
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: glow-border-spin var(--glow-duration, 6s) linear infinite;
+    pointer-events: none;
+    z-index: 500;
+}
+
+@keyframes glow-border-spin {
+    to { --glow-angle: 360deg; }
+}
+
+@property --glow-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .has-glow-border .glow-border-target::after,
+    .glow-border-target::after {
+        animation: none;
+    }
+}

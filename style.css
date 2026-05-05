@@ -3,7 +3,7 @@
  Text Domain:  bew
  Description:  Based on GeneratePress with GSAP embedded.
  Author:       Big Ears Webagentur
- Author URI:   https://bigears.work
+ Author URI:   https://bigears.at
  Template:     generatepress
  Version:      0.1
 */
@@ -11,7 +11,7 @@
 /*** Start KMW ***/
 
 /* Visually hidden h1 (SEO only, not rendered) */
-.be-text--h1-special {
+.be-text--h-special {
     position:    absolute;
     width:       1px;
     height:      1px;
@@ -70,3 +70,20 @@
 /* ON → Wellen sichtbar, X versteckt */
 [data-sound-toggle="on"] .sound-icon-on  { display: block; }
 [data-sound-toggle="on"] .sound-icon-off { display: none; }
+
+/* Card BG */
+.gbp-card {
+    background-color: var(--base);
+    background-image: radial-gradient(
+            var(--base-3) 0.1px,
+            var(--contrast) 0.4px
+    );
+    background-size: 24px 24px;
+}
+
+/* Accordion Transition */
+.gb-accordion__content {
+    transition: max-height .5s ease-in-out;
+    visibility: hidden;
+    will-change: max-height;
+}

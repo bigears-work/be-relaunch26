@@ -54,4 +54,27 @@ add_action( 'wp_enqueue_scripts', function () {
         $v( '/assets/js/logo-anim.js' ),
         true
     );
+
+    // ─── Glow Effects (page-conditional) ─────────────────────────
+    if ( bew_page_has_class( 'has-card-spotlight' ) ) {
+        wp_enqueue_style(  'card-spotlight',    $uri . '/assets/css/card-spotlight.css', [], $v( '/assets/css/card-spotlight.css' ) );
+        wp_enqueue_script( 'card-spotlight-js', $uri . '/assets/js/card-spotlight.js',  [], $v( '/assets/js/card-spotlight.js' ),  true );
+    }
+
+    if ( bew_page_has_class( 'glow-border-target' ) ) {
+        wp_enqueue_style( 'glow-border', $uri . '/assets/css/glow-border.css', [], $v( '/assets/css/glow-border.css' ) );
+    }
 } );
+
+/**
+ * Prüft ob eine CSS-Klasse im post_content vorkommt.
+ * GenerateBlocks schreibt Block-Klassen direkt in post_content —
+ * str_contains() reicht, kein vollständiger HTML-Parse nötig.
+ */
+function bew_page_has_class( string $class ): bool {
+    global $post;
+    if ( ! ( $post instanceof WP_Post ) ) {
+        return false;
+    }
+    return str_contains( $post->post_content, $class );
+}

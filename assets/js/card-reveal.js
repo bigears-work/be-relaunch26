@@ -35,7 +35,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			scrollTrigger: {
 				trigger:             grid,
 				start:               'top 80%',
-				end:                 'top 5%',
+				end:                 'bottom 90%',
 				scrub:               1.5,
 				invalidateOnRefresh: true,
 			},
