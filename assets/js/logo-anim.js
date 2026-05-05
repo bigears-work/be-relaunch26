@@ -11,7 +11,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 	if ( window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) return;
 
-	const logo = document.querySelector( 'header.gb-site-header > .gbp-logo .custom-logo' );
+	const logo = document.querySelector( 'header.gb-site-header .gbp-logo .custom-logo' );
 	if ( ! logo ) return;
 
 	const isTouch = window.matchMedia( '(pointer: coarse)' ).matches;
